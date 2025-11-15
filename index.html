@@ -15,31 +15,109 @@
             font-family: 'Georgia', serif;
             background-color: #f5f5f5;
             color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            color: #bdc3c7;
+            font-style: italic;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: #3498db;
+        }
+
+        .nav-item.active {
+            background-color: rgba(52, 152, 219, 0.2);
+            border-left-color: #3498db;
+        }
+
+        .nav-item h3 {
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+        }
+
+        .nav-item p {
+            font-size: 0.8rem;
+            color: #bdc3c7;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
             background-color: #fff;
             padding: 2rem;
-            text-align: center;
             border-bottom: 1px solid #ddd;
         }
 
-        header h1 {
-            font-size: 2.5rem;
+        header h2 {
+            font-size: 2rem;
             font-weight: 300;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         header p {
             margin-top: 0.5rem;
             color: #666;
-            font-style: italic;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
         }
 
         .gallery {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 0 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
@@ -84,14 +162,16 @@
             background-color: #fff;
             text-align: center;
             padding: 2rem;
-            margin-top: 4rem;
+            margin-top: auto;
             border-top: 1px solid #ddd;
         }
 
         footer p {
             color: #666;
+            margin: 0.3rem 0;
         }
 
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -123,75 +203,359 @@
         .close:hover {
             color: #ccc;
         }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background-color: #2c3e50;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>ARTIST NAME</h1>
-        <p>Contemporary Visual Art</p>
-    </header>
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" onclick="toggleSidebar()">☰ Menu</button>
 
-    <div class="gallery">
-        <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800')">
-            <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=400" alt="Abstract Art 1">
-            <div class="artwork-info">
-                <h3>Sunset Dreams</h3>
-                <p>Acrylic on Canvas, 2024</p>
-            </div>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1>ARTIST NAME</h1>
+            <p>Contemporary Visual Art</p>
         </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="showSection('paintings')">
+                <h3>Paintings</h3>
+                <p>Acrylic & Oil Works</p>
+            </li>
+            <li class="nav-item" onclick="showSection('abstract')">
+                <h3>Abstract</h3>
+                <p>Mixed Media</p>
+            </li>
+            <li class="nav-item" onclick="showSection('digital')">
+                <h3>Digital Art</h3>
+                <p>Digital Creations</p>
+            </li>
+            <li class="nav-item" onclick="showSection('photography')">
+                <h3>Photography</h3>
+                <p>Visual Stories</p>
+            </li>
+            <li class="nav-item" onclick="showSection('about')">
+                <h3>About</h3>
+                <p>Artist Bio</p>
+            </li>
+        </ul>
+    </aside>
 
-        <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800')">
-            <img src="https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=400" alt="Abstract Art 2">
-            <div class="artwork-info">
-                <h3>Urban Flow</h3>
-                <p>Mixed Media, 2024</p>
-            </div>
-        </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Paintings Section -->
+        <section id="paintings" class="section active">
+            <header>
+                <h2>Paintings</h2>
+                <p>Acrylic and oil works exploring color and form</p>
+            </header>
+            <div class="gallery">
+                <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800')">
+                    <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=400" alt="Painting 1">
+                    <div class="artwork-info">
+                        <h3>Sunset Dreams</h3>
+                        <p>Acrylic on Canvas, 2024</p>
+                    </div>
+                </div>
 
-        <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800')">
-            <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400" alt="Abstract Art 3">
-            <div class="artwork-info">
-                <h3>Ocean Whispers</h3>
-                <p>Oil on Canvas, 2023</p>
-            </div>
-        </div>
+                <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800')">
+                    <img src="https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=400" alt="Painting 2">
+                    <div class="artwork-info">
+                        <h3>Urban Flow</h3>
+                        <p>Oil on Canvas, 2024</p>
+                    </div>
+                </div>
 
-        <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1549887534-1541e9326642?w=800')">
-            <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=400" alt="Abstract Art 4">
-            <div class="artwork-info">
-                <h3>Golden Hour</h3>
-                <p>Acrylic on Canvas, 2023</p>
-            </div>
-        </div>
+                <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800')">
+                    <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400" alt="Painting 3">
+                    <div class="artwork-info">
+                        <h3>Ocean Whispers</h3>
+                        <p>Oil on Canvas, 2023</p>
+                    </div>
+                </div>
 
-        <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=800')">
-            <img src="https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=400" alt="Abstract Art 5">
-            <div class="artwork-info">
-                <h3>Ethereal Motion</h3>
-                <p>Digital Art, 2024</p>
-            </div>
-        </div>
+                <div class="artwork" onclick="openModal('images/your-image-1.jpg')">
+                    <img src="images/your-image-1.jpg" alt="Painting 4">
+                    <div class="artwork-info">
+                        <h3>Your Artwork Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
 
-        <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1555098542-84a5a3a060c0?w=800')">
-            <img src="https://images.unsplash.com/photo-1555098542-84a5a3a060c0?w=400" alt="Abstract Art 6">
-            <div class="artwork-info">
-                <h3>Mountain Echo</h3>
-                <p>Watercolor, 2023</p>
+                <div class="artwork" onclick="openModal('images/your-image-2.jpg')">
+                    <img src="images/your-image-2.jpg" alt="Painting 5">
+                    <div class="artwork-info">
+                        <h3>Your Artwork Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/your-image-3.jpg')">
+                    <img src="images/your-image-3.jpg" alt="Painting 6">
+                    <div class="artwork-info">
+                        <h3>Your Artwork Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/your-image-4.jpg')">
+                    <img src="images/your-image-4.jpg" alt="Painting 7">
+                    <div class="artwork-info">
+                        <h3>Your Artwork Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/your-image-5.jpg')">
+                    <img src="images/your-image-5.jpg" alt="Painting 8">
+                    <div class="artwork-info">
+                        <h3>Your Artwork Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Abstract Section -->
+        <section id="abstract" class="section">
+            <header>
+                <h2>Abstract</h2>
+                <p>Mixed media explorations of texture and emotion</p>
+            </header>
+            <div class="gallery">
+                <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1549887534-1541e9326642?w=800')">
+                    <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=400" alt="Abstract 1">
+                    <div class="artwork-info">
+                        <h3>Golden Hour</h3>
+                        <p>Mixed Media, 2023</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=800')">
+                    <img src="https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=400" alt="Abstract 2">
+                    <div class="artwork-info">
+                        <h3>Ethereal Motion</h3>
+                        <p>Acrylic & Ink, 2024</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/abstract-1.jpg')">
+                    <img src="images/abstract-1.jpg" alt="Abstract 3">
+                    <div class="artwork-info">
+                        <h3>Your Abstract Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/abstract-2.jpg')">
+                    <img src="images/abstract-2.jpg" alt="Abstract 4">
+                    <div class="artwork-info">
+                        <h3>Your Abstract Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/abstract-3.jpg')">
+                    <img src="images/abstract-3.jpg" alt="Abstract 5">
+                    <div class="artwork-info">
+                        <h3>Your Abstract Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/abstract-4.jpg')">
+                    <img src="images/abstract-4.jpg" alt="Abstract 6">
+                    <div class="artwork-info">
+                        <h3>Your Abstract Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/abstract-5.jpg')">
+                    <img src="images/abstract-5.jpg" alt="Abstract 7">
+                    <div class="artwork-info">
+                        <h3>Your Abstract Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/abstract-6.jpg')">
+                    <img src="images/abstract-6.jpg" alt="Abstract 8">
+                    <div class="artwork-info">
+                        <h3>Your Abstract Title</h3>
+                        <p>Medium, Year</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Digital Art Section -->
+        <section id="digital" class="section">
+            <header>
+                <h2>Digital Art</h2>
+                <p>Contemporary digital creations and compositions</p>
+            </header>
+            <div class="gallery">
+                <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1555098542-84a5a3a060c0?w=800')">
+                    <img src="https://images.unsplash.com/photo-1555098542-84a5a3a060c0?w=400" alt="Digital 1">
+                    <div class="artwork-info">
+                        <h3>Mountain Echo</h3>
+                        <p>Digital Art, 2024</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800')">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400" alt="Digital 2">
+                    <div class="artwork-info">
+                        <h3>Digital Dreams</h3>
+                        <p>Digital Art, 2024</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/digital-1.jpg')">
+                    <img src="images/digital-1.jpg" alt="Digital 3">
+                    <div class="artwork-info">
+                        <h3>Your Digital Title</h3>
+                        <p>Digital Art, Year</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('images/digital-2.jpg')">
+                    <img src="images/digital-2.jpg" alt="Digital 4">
+                    <div class="artwork-info">
+                        <h3>Your Digital Title</h3>
+                        <p>Digital Art, Year</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photography Section -->
+        <section id="photography" class="section">
+            <header>
+                <h2>Photography</h2>
+                <p>Captured moments and visual narratives</p>
+            </header>
+            <div class="gallery">
+                <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800')">
+                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400" alt="Photo 1">
+                    <div class="artwork-info">
+                        <h3>Starry Night</h3>
+                        <p>Photography, 2023</p>
+                    </div>
+                </div>
+
+                <div class="artwork" onclick="openModal('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800')">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400" alt="Photo 2">
+                    <div class="artwork-info">
+                        <h3>Mountain Vista</h3>
+                        <p>Photography, 2023</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <header>
+                <h2>About the Artist</h2>
+                <p>Background and artistic journey</p>
+            </header>
+            <div style="max-width: 800px; margin: 3rem auto; padding: 0 2rem; line-height: 1.8;">
+                <p style="margin-bottom: 1rem;">
+                    Welcome to my art portfolio. I am a contemporary artist working across multiple mediums including painting, digital art, and photography.
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    My work explores the intersection of color, form, and emotion, drawing inspiration from both natural landscapes and urban environments.
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    For inquiries, commissions, or collaborations, please feel free to reach out.
+                </p>
+                <p style="margin-top: 2rem; font-weight: bold;">
+                    Contact: contact@artistname.com
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 Artist Name. All rights reserved.</p>
+            <p>contact@artistname.com</p>
+        </footer>
     </div>
 
+    <!-- Modal -->
     <div id="modal" class="modal" onclick="closeModal()">
         <span class="close">&times;</span>
         <img class="modal-content" id="modalImg">
     </div>
 
-    <footer>
-        <p>&copy; 2024 Artist Name. All rights reserved.</p>
-        <p>contact@artistname.com</p>
-    </footer>
-
     <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked nav item
+            event.target.closest('.nav-item').classList.add('active');
+
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
         function openModal(imgSrc) {
             const modal = document.getElementById('modal');
             const modalImg = document.getElementById('modalImg');
@@ -206,6 +570,19 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeModal();
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth <= 768 && 
+                sidebar.classList.contains('open') && 
+                !sidebar.contains(e.target) && 
+                !menuToggle.contains(e.target)) {
+                sidebar.classList.remove('open');
             }
         });
     </script>
